@@ -1,0 +1,56 @@
+---
+title: "Untitled"
+author: "Lindsay Beyak"
+date: "3/31/2021"
+output:
+  word_document: default
+  html_document: default
+---
+```{r, message=FALSE, warning=FALSE}
+library(tidycensus)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+#### Exercise 1
+```{r}
+#a)
+census_api_key("2153faf1e1d25707ef71c8c464cb4c2c08be4e76")
+install = TRUE
+
+year00 <- get_decennial(geography = "state", 
+                       variables = "P013001", 
+                       year = 2000)
+year00
+
+#b)
+mean(year00$value)
+median(year00$value)
+min(year00$value)
+quantile(year00$value, 0.25)
+quantile(year00$value, 0.75)
+```
+
+#### Exercise 2
+```{r}
+#a)
+year10 <- get_decennial(geography = "state", 
+                       variables = "P013H002", 
+                       year = 2010)
+year10
+
+#b)
+mean(year10$value)
+median(year10$value)
+min(year10$value)
+quantile(year10$value, 0.25)
+quantile(year10$value, 0.75)
+
+#c)
+ m25 <- year10 %>% select(NAME | value) %>%
+   filter(value < 25)
+ 
+m25
+
+```
