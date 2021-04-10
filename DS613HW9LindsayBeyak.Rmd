@@ -1,0 +1,63 @@
+---
+title: "Homework 9"
+author: "Lindsay Beyak"
+date: "4/9/2021"
+output:
+  word_document: default
+  html_document: default
+---
+```{r, message=FALSE, warning=FALSE}
+library(tidycensus)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+#### _#1_
+Below is the key assigned to me to use.
+```{r}
+census_api_key("afc449cdf30a2917a2db3ebdc69a598978d3871c")
+install = TRUE
+```
+
+#### _#2_ a)
+```{r}
+a15 <- load_variables(2015, "acs5", cache = TRUE)
+
+view(a15)
+ca <- get_acs(geography = "county", 
+              variables = c(medincome = "B01001A_011"), 
+              state = "CA", year = 2015)
+ca
+```
+
+#### _#2_ b)
+```{r}
+over30k <- ca %>%
+  filter(estimate > 30000) 
+
+over30k %>% arrange(desc(estimate))
+```
+
+#### _#2_ c)
+```{r}
+over30k %>% filter(estimate == 51644)
+```
+
+#### _#2d_ d)
+```{r}
+ggplot(over30k, aes(estimate, colour = "pink")) +
+  geom_boxplot()
+```
+
+#### _#2_ e)
+```{r}
+over30k %>%
+  mutate(NAME = gsub(" County, California", "", NAME)) %>%
+  ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
+  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+  geom_point(color = "pink", size = 3) +
+  labs(title = "Median income for White Males Ages 35 to 44",
+       subtitle = "2015 American Community Survey",
+       y = "",
+       x = "ACS estimate (bars represent margin of error)")
+```
